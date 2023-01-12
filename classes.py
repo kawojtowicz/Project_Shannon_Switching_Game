@@ -254,6 +254,7 @@ class GameRun:
             self._game._board.move(field_str[0], field_str[1], sign)
         return result
 
+
     def players_move(self, player):
         move1 = ''
         while type(move1) == str:
