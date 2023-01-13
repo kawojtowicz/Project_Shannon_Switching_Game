@@ -185,8 +185,8 @@ def test_move_field_taken():
 
 
 def test__str__board():
-    board = Board(7)
-    line = '-X-X-X-\nO-O-O-O\n-X-X-X-\nO-O-O-O\n-X-X-X-\nO-O-O-O\n-X-X-X-\n'
+    board = Board(5)
+    line = '   01234\n   OOOOO\nA X-X-X-X\nB XO-O-OX\nC X-X-X-X\nD XO-O-OX\nE X-X-X-X\n   OOOOO'
     assert str(board) == line
 
 
@@ -381,22 +381,31 @@ def test_create_game_run():
     assert not game_run.result_of_game
 
 
-def test_moving_wrong_letter():
-    game_run = GameRun("Human", 5, 'Kasia', "Player")
-    assert game_run.making_moves("72", game_run._game._player1) == 'wrong letter'
+# def test_moving_wrong_letter():
+#     game_run = GameRun("Human", 5, 'Kasia', "Player")
+#     assert game_run.making_moves("72", game_run._game._player1) == 'wrong letter'
 
 
-def test_moving_wrong_number():
-    game_run = GameRun("Human", 5, 'Kasia', "Player")
-    assert game_run.making_moves("A9", game_run._game._player1) == 'invalid number'
+# def test_moving_wrong_number():
+#     game_run = GameRun("Human", 5, 'Kasia', "Player")
+#     assert game_run.making_moves("A9", game_run._game._player1) == 'invalid number'
 
 
-def test_moving_invalid_length():
-    game_run = GameRun("Human", 5, 'Kasia', "Player")
-    assert game_run.making_moves("A33", game_run._game._player1) == 'invalid length'
+# def test_moving_invalid_length():
+#     game_run = GameRun("Human", 5, 'Kasia', "Player")
+#     assert game_run.making_moves("A33", game_run._game._player1) == 'invalid length'
 
 
-def test_moving_normal():
-    game_run = GameRun("Human", 5, "Kasia", "PL")
-    game_run.making_moves('A0', game_run._game._player1)
-    assert game_run._game._board.fields['00']._sign == game_run._game._player1._sign
+# def test_moving_normal():
+#     game_run = GameRun("Human", 5, "Kasia", "PL")
+#     game_run.making_moves('A0', game_run._game._player1)
+#     assert game_run._game._board.fields['00']._sign == game_run._game._player1._sign
+
+
+def test_players_move():
+    player1 = ('Human', 'Kasia', "O", 'up-down')
+    player2 = ('Human', 'Ann', "X", 'left-right')
+    game = Game(player1, player2, 5)
+    game._board.fields = test_fields_sim
+    game.players_move('0', '0', game._player1)
+    assert not game._board.fields['00'].is_free

@@ -51,7 +51,7 @@ class HumanPlayer:
         while number == '':
             number = input("Enter number of choosen field.")
             if int(number) not in range(self._board_size + 1):
-                print(f"Your first sign has to be number 0-{edge1}")
+                print(f"Your second sign has to be number 0-{edge1}")
                 number = ''
         letter = ord(letter) - 65
         number = int(number)

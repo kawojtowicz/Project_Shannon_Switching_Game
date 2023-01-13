@@ -106,16 +106,19 @@ class Board:
         self.fields[key].set_sign(sign)
 
     def __str__(self):
-        first_line = self._size * 'O'
-        board = f'   {first_line}\n'
+        first_line = f'   '
+        for number in range(self._size):
+            first_line += f'{number}'
+        second_line = self._size * 'O'
+        board = f'{first_line}\n   {second_line}\n'
         line = ''
         for letter in range(self._size):
             for number in range(self._size):
                 field_sign = self.fields[f"{letter}{number}"]._sign
                 line += field_sign
-            board += f'{letter} X{line}X\n'
+            board += f'{chr(letter + 65)} X{line}X\n'
             line = ''
-        board += f'   {first_line}'
+        board += f'   {second_line}'
         return board
 
 
@@ -229,6 +232,14 @@ class Game:
         # game in not finished
         return False
 
+    def players_move(self, letter, number, player):
+        print(f"{player.name}'s turn:\n")
+        while not self._board.fields[f'{letter}{number}'].is_free:
+            print('This field is not free. Choose another.')
+            letter, number = player.give_letter_and_number()
+        if self._board.fields[f'{letter}{number}'].is_free:
+            self._board.fields[f'{letter}{number}'].set_sign(player._sign)
+
 
 class GameRun:
     def __init__(self, game_mode, board_size, name1='Player1', name2='Player2'):
@@ -240,41 +251,15 @@ class GameRun:
         self._game = Game(self._player1, self._player2, board_size)
         self.result_of_game = False
 
-    def making_moves(self, field_str, player):
-        sign = player._sign
-        result = True
-        # ord_letter = ord(field_str[0])
-        # if ord_letter not in range(65, 65 + self._game._board._size):
-        #     result = 'wrong letter'
-        # elif len(field_str) != 2:
-        #     result = 'invalid length'
-        # elif int(field_str[1]) not in range(self._game._board._size):
-        #     result = 'invalid number'
-        if type(result) != str:
-            self._game._board.move(field_str[0], field_str[1], sign)
-        return result
-
-
-    def players_move(self, player):
-        move1 = ''
-        while type(move1) == str:
-            field = self._game._player1.give_letter_and_number()
-            field = f'{field[0]}{field[1]}'
-            move1 = self.making_moves(field, self._game._player1)
-            print(str(self._game._board))
-        if self._game._player1._moving == 'left-right':
-            self.result_of_game = self._game.check_if_game_is_finished_left_right(player._sign)
-        else:
-            self.result_of_game = self._game.check_if_game_is_finished_up_down(player._sign)
-
     def run_game(self):
-            while not self.result_of_game:
-                #players1 move
-                #players2 move
-                self.players_move(self._game._player1)
-                if not self.result_of_game:
-                    self.players_move(self._game._player2)
-            return self.result_of_game
-
-
-
+        while not self.result_of_game:
+            letter, number = self._game._player1.give_letter_and_number()
+            self._game.players_move(letter, number, self._player1)
+            print(str(self._game._board))
+            self._game.check_if_game_is_finished_left_right()
+            if not self.result_of_game:
+                letter, number = self._game._player2.give_letter_and_number()
+                self._game.players_move(letter, number, self._player2)
+                print(str(self._game._board))
+                self._game.check_if_game_is_finished_left_right()
+        return self.result_of_game
