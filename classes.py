@@ -1,4 +1,6 @@
 from Human_Player import HumanPlayer
+from RandomComputerPlayer import RandomComputerPlayer
+from HeavyComputerPlayer import HeavyComputerPlayer
 
 
 class InvalidSizeError(ValueError):
@@ -55,10 +57,10 @@ class MovingTypeError(ValueError):
 
 class Field:
     def __init__(self, letter, number, is_free=True, sign='-'):
-        if letter not in range(26):
-            raise InvalidLetterError('Letter of field has to be in range A-Z.')
-        if number not in range(26):
-            msg = 'Number of field has to be in range 0-25.'
+        if letter not in range(10):
+            raise InvalidLetterError('Letter of field has to be in range A-I.')
+        if number not in range(10):
+            msg = 'Number of field has to be in range 0-9.'
             raise InvalidNumberError(msg)
         if sign not in ['-', 'X', 'O']:
             raise InvalidSignError('Sign of a field has to be - or X or O.')
@@ -82,8 +84,8 @@ class Field:
 
 class Board:
     def __init__(self, size):
-        if size > 25 or size < 5 or type(size) != int:
-            msg = 'Size of board should be bigger than 5 and lesser than 25.'
+        if size > 9 or size < 5 or type(size) != int:
+            msg = 'Size of board should be bigger than 4 and lesser than 10.'
             raise InvalidSizeError(msg)
         if size % 2 == 0:
             raise EvenSizeError('Size of board cannot be even.')
@@ -127,10 +129,10 @@ class Game:
         # player is a tuple (class, name, sign, moving)
         if type(board_size) != int:
             raise InvalidSizeError('Board size has to be int type.')
-        if board_size < 5 or board_size > 25:
+        if board_size < 5 or board_size > 9:
             msg = 'Size of board should be bigger than 5 and lesser than 25.'
             raise InvalidSizeError(msg)
-        if pl1_inf[0] not in ['Human'] or pl2_inf[0] not in ['Human']:
+        if pl1_inf[0] not in ['Human', '2', '3'] or pl2_inf[0] not in ['Human', '2', '3']:
             raise InvalidPlayersClassError("Unknown player's class.")
         if type(pl1_inf[1]) != str or type(pl2_inf[1]) != str:
             raise InvalidNameTypeError('Name has to be str type.')
@@ -149,6 +151,11 @@ class Game:
         self._player1 = HumanPlayer(name1, pl1_inf[2], pl1_inf[3], board_size)
         if pl2_inf[0] == 'Human':
             self._player2 = HumanPlayer(name2, sign2, pl2_inf[3], board_size)
+        elif pl2_inf[0] == '2':
+            self._player2 == RandomComputerPlayer('Computer Player', sign2, pl2_inf[3], board_size)
+        elif pl2_inf[0] == '3':
+            self._player2 = HeavyComputerPlayer('Computer Player', sign2, pl1_inf[3], board_size)
+
 
     def up_down_connected(self, fields_dict, pl_sign, fields_in):
         for key in fields_in:
@@ -232,10 +239,12 @@ class Game:
         # game in not finished
         return False
 
-    def players_move(self, letter, number, player):
-        print(f"{player.name}'s turn:\n")
+    def players_move(self, letter, number, player, previous_letter=None, previous_number=None):
         while not self._board.fields[f'{letter}{number}'].is_free:
-            print('This field is not free. Choose another.')
+            if type(player) is HumanPlayer:
+                print('This field is not free. Choose another.')
+            if type(player) is HeavyComputerPlayer:
+                letter, number = player.give_letter_and_number(previous_letter, previous_number, self._board.fields)
             letter, number = player.give_letter_and_number()
         if self._board.fields[f'{letter}{number}'].is_free:
             self._board.fields[f'{letter}{number}'].set_sign(player._sign)
@@ -245,21 +254,23 @@ class GameRun:
     def __init__(self, game_mode, board_size, name1='Player1', name2='Player2'):
         self._game_mode = game_mode
         self._player1 = ('Human', name1, 'X', 'left-right')
-        if self._game_mode == 'Human':
-            player2_class = 'Human'
-        self._player2 = (player2_class, name2, 'O', 'up-down')
+        self._player2 = (self._game_mode, name2, 'O', 'up-down')
         self._game = Game(self._player1, self._player2, board_size)
         self.result_of_game = False
 
     def run_game(self):
         while not self.result_of_game:
             letter, number = self._game._player1.give_letter_and_number()
-            self._game.players_move(letter, number, self._player1)
+            self._game.players_move(letter, number, self._game._player1)
             print(str(self._game._board))
-            self._game.check_if_game_is_finished_left_right()
+            self.result_of_game = self._game.check_if_game_is_finished_left_right(self._game._player1._sign)
             if not self.result_of_game:
-                letter, number = self._game._player2.give_letter_and_number()
-                self._game.players_move(letter, number, self._player2)
+                if type(self._game._player2) == HeavyComputerPlayer:
+                    previous_letter, previous_number = letter, number
+                    letter, number = self._game._player2.give_letter_and_number(previous_letter, previous_number, self._game._board.fields)
+                else:
+                    letter, number = self._game._player2.give_letter_and_number()
+                self._game.players_move(letter, number, self._game._player2)
                 print(str(self._game._board))
-                self._game.check_if_game_is_finished_left_right()
+                self.result_of_game = self._game.check_if_game_is_finished_up_down(self._game._player2._sign)
         return self.result_of_game

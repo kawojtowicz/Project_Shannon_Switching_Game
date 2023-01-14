@@ -1,29 +1,32 @@
-from classes import Field, Board, Game, GameRun
-from classes import InvalidSizeError, EvenSizeError, InvalidFieldError
-from classes import FieldIsTakenError
-from Human_Player import HumanPlayer, InvalidLetterError, TooManySignsError
-from Human_Player import InvalidNumberError
-from Human_Player import SignNotStringError, MovingError, NameNotStringError
+from classes import GameRun
 
 
 def main():
-    msg = "This is Shannon Switching Gale\nPlease, choose game mode.\n"
-    msg += 'Enter 1 to play with your friend.'
-    game_mode = input(msg)
-    board_size = int(input("Please, choose board size 5-25"))
+    msg = "\nThis is Shannon Switching Gale\nPlease, choose game mode:\n"
+    print(msg)
+    game_mode = input('1  -  human opponent\n2  -  easy computer opponent\n3  -  hard computer opponent\n')
+    board_size = ''
+    while board_size not in [5, 7, 9]:
+        try:
+            board_size = int(input("Please, choose board size.\n5  -  small\n7  -  medium\n9  -  big\n"))
+        except:
+            print('Invlid board size.')
     if game_mode == '1':
-        name1 = input("Player 1:\nPlease, enter your name.")
+        name1 = ''
+        name2 = ''
+        while not name1:
+            name1 = input("Player 1:\nPlease, enter your name.\n")
+        while not name2:
+            name2 = input("Player 2:\nPlease, enter your name.\n")
+            if name2 == name1:
+                input("Player 2:\nYour name cannot be the same as your opponent's.\nChoose another name.")
         game_mode = "Human"
-        class2 = 'Human'
-        name2 = input("Player 2:\nPlease, enter your name.")
         game_run = GameRun(game_mode, board_size, name1, name2)
     else:
-        player1_name = input('Please, enter your name.')
-    # player1_info = ('Human', player1_name, 'X', 'up-down')
-    # player2_info = (player2_class, player2_name, 'O', 'left-right')
-    # representation = str(game._board)
+        name1 = input('Please, enter your name.\n')
+        game_run = GameRun(game_mode, board_size, name1, 'Computer')
     print(str(game_run._game._board))
-    game = game_run.run_game(game)
+    game = game_run.run_game()
     return game
 
 

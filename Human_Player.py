@@ -41,18 +41,22 @@ class HumanPlayer:
         edge = 64 + self._board_size
         edge1 = self._board_size - 1
         while letter == '':
-            letter = input("Enter letter of choosen field.")
+            letter = input(f"{self.name}, enter letter of choosen field.")
             if len(letter) > 1:
                 print('"Please, enter one sign"')
                 letter = ''
-            if ord(letter) < 65 or ord(letter) > edge:
-                print(f"Your first sign has to be letter A-{edge}")
+            elif letter != '' and (ord(letter) < 65 or ord(letter) > edge):
+                print(f"Your first sign has to be letter A-{chr(edge)}")
                 letter = ''
         while number == '':
-            number = input("Enter number of choosen field.")
-            if int(number) not in range(self._board_size + 1):
-                print(f"Your second sign has to be number 0-{edge1}")
+            number = input(f"{self.name}, enter number of choosen field.")
+            if len(number) != 1:
+                print('Please, choose one sign.')
                 number = ''
+            elif number != '' and ord(number) not in range(48, 58):
+                if (int(number) not in range(self._board_size + 1)):
+                    print(f"Your second sign has to be number 0-{edge1}")
+                    number = ''
         letter = ord(letter) - 65
         number = int(number)
         return (letter, number)
