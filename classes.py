@@ -265,6 +265,7 @@ class GameRun:
         self.result_of_game = False
 
     def run_game(self):
+        # to edit
         while not self.result_of_game:
             letter, number = self._game._player1.give_letter_and_number()
             self._game.players_move(self._game._player1, letter, number)
