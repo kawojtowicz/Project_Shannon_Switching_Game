@@ -26,25 +26,25 @@ test_fields_sim = {
         '43': Field(4, 3, False, "X"), '44': Field(4, 4)}
 
 test_fields2 = {
-        '00': Field(0, 0), '01': Field(0, 1, True, 'X'),
-        '02': Field(0, 2, True, 'X'),
-        '03': Field(0, 3, True, 'X'), '04': Field(0, 4),
+        '00': Field(0, 0), '01': Field(0, 1, False, 'X'),
+        '02': Field(0, 2, False, 'X'),
+        '03': Field(0, 3, False, 'X'), '04': Field(0, 4),
 
-        '10': Field(1, 0, True, 'O'), '11': Field(1, 1, True, 'X'),
-        '12': Field(1, 2, True, 'O'),
-        '13': Field(1, 3, True, 'X'), '14': Field(1, 4, True, 'O'),
+        '10': Field(1, 0, False, 'O'), '11': Field(1, 1, False, 'X'),
+        '12': Field(1, 2, False, 'O'),
+        '13': Field(1, 3, False, 'X'), '14': Field(1, 4, False, 'O'),
 
-        '20': Field(2, 0, True, 'X'), '21': Field(2, 1, True, 'X'),
+        '20': Field(2, 0, False, 'X'), '21': Field(2, 1, False, 'X'),
         '22': Field(2, 2),
-        '23': Field(2, 3, True, 'X'), '24': Field(2, 4),
+        '23': Field(2, 3, False, 'X'), '24': Field(2, 4),
 
-        '30': Field(3, 0, True, 'O'), '31': Field(3, 1),
-        '32': Field(3, 2, True, 'O'),
-        '33': Field(3, 3, True, 'X'), '34': Field(3, 4, True, 'O'),
+        '30': Field(3, 0, False, 'O'), '31': Field(3, 1),
+        '32': Field(3, 2, False, 'O'),
+        '33': Field(3, 3, False, 'X'), '34': Field(3, 4, False, 'O'),
 
-        '40': Field(4, 0), '41': Field(4, 1, True, 'X'),
+        '40': Field(4, 0), '41': Field(4, 1, False, 'X'),
         '42': Field(4, 2),
-        '43': Field(4, 3, True, 'X'), '44': Field(4, 4, True, 'X')
+        '43': Field(4, 3, False, 'X'), '44': Field(4, 4, False, 'X')
     }
 
 test_fields3 = {
@@ -68,25 +68,25 @@ test_fields3 = {
         '43': Field(4, 3, False, "X"), '44': Field(4, 4)}
 
 test_fields4 = {
-        '00': Field(0, 0), '01': Field(0, 1, True, 'X'),
-        '02': Field(0, 2, True, 'O'),
-        '03': Field(0, 3, True, 'X'), '04': Field(0, 4),
+        '00': Field(0, 0), '01': Field(0, 1, False, 'X'),
+        '02': Field(0, 2, False, 'O'),
+        '03': Field(0, 3, False, 'X'), '04': Field(0, 4),
 
-        '10': Field(1, 0, True, 'O'), '11': Field(1, 1, True, 'X'),
-        '12': Field(1, 2, True, 'O'),
-        '13': Field(1, 3, True, 'X'), '14': Field(1, 4, True, 'O'),
+        '10': Field(1, 0, False, 'O'), '11': Field(1, 1, False, 'X'),
+        '12': Field(1, 2, False, 'O'),
+        '13': Field(1, 3, False, 'X'), '14': Field(1, 4, False, 'O'),
 
-        '20': Field(2, 0, True, 'X'), '21': Field(2, 1, True, 'X'),
-        '22': Field(2, 2, True, 'O'),
-        '23': Field(2, 3, True, 'X'), '24': Field(2, 4),
+        '20': Field(2, 0, False, 'X'), '21': Field(2, 1, False, 'X'),
+        '22': Field(2, 2, False, 'O'),
+        '23': Field(2, 3, False, 'X'), '24': Field(2, 4),
 
-        '30': Field(3, 0, True, 'O'), '31': Field(3, 1, True, 'O'),
-        '32': Field(3, 2, True, 'O'),
-        '33': Field(3, 3, True, 'X'), '34': Field(3, 4, True, 'O'),
+        '30': Field(3, 0, False, 'O'), '31': Field(3, 1, False, 'O'),
+        '32': Field(3, 2, False, 'O'),
+        '33': Field(3, 3, False, 'X'), '34': Field(3, 4, False, 'O'),
 
-        '40': Field(4, 0), '41': Field(4, 1, True, 'X'),
+        '40': Field(4, 0), '41': Field(4, 1, False, 'X'),
         '42': Field(4, 2),
-        '43': Field(4, 3, True, 'X'), '44': Field(4, 4, True, 'X')
+        '43': Field(4, 3, False, 'X'), '44': Field(4, 4, False, 'X')
     }
 
 
@@ -100,22 +100,31 @@ def test_create_field():
 
 def test_create_field_invalid_letter():
     with pytest.raises(InvalidLetterError):
-        Field(75, 12)
+        Field(75, 9)
 
 
 def test_create_field_invalid_number():
     with pytest.raises(InvalidNumberError):
-        Field(4, 80)
+        Field(4, '')
+    with pytest.raises(InvalidNumberError):
+        Field(4, 12)
 
 
 def test_create_field_invalid_sign():
     with pytest.raises(InvalidSignError):
-        Field(5, 12, sign='U')
+        Field(5, 9, sign='U')
 
 
 def test_create_field_invalid_is_free():
     with pytest.raises(InvalidIsFreeTypeError):
-        Field(5, 12, 7)
+        Field(5, 9, 7)
+
+
+def test__str__():
+    field = Field(1, 7)
+    assert str(field) == '-'
+    field2 = Field(1, 1, sign= 'X')
+    assert str(field2) == 'X'
 
 
 def test_set_sign():
@@ -131,11 +140,8 @@ def test_set_sign_invalid_new_sign():
     field = Field(0, 6)
     with pytest.raises(InvalidSignError):
         field.set_sign('T')
-
-
-def test__str__():
-    field = Field(1, 7)
-    assert str(field) == '-'
+    with pytest.raises(InvalidSignError):
+        field.set_sign(7)
 
 
 def test_create_board_normal():
@@ -145,10 +151,10 @@ def test_create_board_normal():
         assert test_fields_sim[key]._number == board.fields[key]._number
         assert test_fields_sim[key].is_free == board.fields[key].is_free
         assert test_fields_sim[key]._sign == board.fields[key]._sign
-        assert board._size == 5
+    assert board._size == 5
 
 
-def test_create_board_even_number():
+def test_create_board_size_even_number():
     with pytest.raises(EvenSizeError):
         Board(6)
 
@@ -158,11 +164,6 @@ def test_create_board_invalid_number():
         Board(45)
     with pytest.raises(InvalidSizeError):
         Board(3)
-
-
-def test_create_board_even_size():
-    with pytest.raises(EvenSizeError):
-        Board(12)
 
 
 def test_move_normal():
@@ -222,6 +223,10 @@ def test_create_game_invalid_players_class():
     player2 = ('Human', 'Ann', "O", 'left-right')
     with pytest.raises(InvalidPlayersClassError):
         Game(player1, player2, 5)
+    player3 = ('Human', 'Kasia', "X", 'up-down')
+    player4 = ('6', 'Ann', "O", 'left-right')
+    with pytest.raises(InvalidPlayersClassError):
+        Game(player3, player4, 5)
 
 
 def test_create_game_invalid_name_type():
@@ -242,6 +247,13 @@ def test_create_game_invalid_moving_type():
     player1 = ('Human', 'Kasia', "X", 'up-dow')
     player2 = ('Human', 'Ann', "O", 'left-right')
     with pytest.raises(MovingTypeError):
+        Game(player1, player2, 5)
+
+
+def test_create_game_invalid_sign():
+    player1 = ('Human', 'Kasia', "T", 'up-dow')
+    player2 = ('Human', 'Ann', "O", 'left-right')
+    with pytest.raises(InvalidSignError):
         Game(player1, player2, 5)
 
 
@@ -286,7 +298,7 @@ def test_move_on_or_end_left_right():
     player2 = ('Human', 'Ann', "O", 'left-right')
     game = Game(player1, player2, 5)
     fields_in = ['44']
-    msg = 'Game won player with X'
+    msg = 'X'
     assert game.move_on_or_end_left_right(fields_in, 'X', test_fields2) == msg
     fields_in1 = ['01', '11', '21', '41']
     fields_in1 = game.move_on_or_end_left_right(fields_in1, 'X', test_fields2)
@@ -307,7 +319,7 @@ def test_move_on_or_end_up_down():
     player2 = ('Human', 'Ann', "O", 'left-right')
     game = Game(player1, player2, 5)
     fields_in = ['42']
-    msg = 'Game won player with O'
+    msg = 'O'
     assert game.move_on_or_end_up_down(fields_in, 'O', test_fields3) == msg
     fields_in1 = ['10', '12', '13', '14']
     fields_in1 = game.move_on_or_end_up_down(fields_in1, 'O', test_fields3)
@@ -346,7 +358,7 @@ def test_check_if_game_is_finished_left_right():
     player2 = ('Human', 'Ann', "O", 'left-right')
     game = Game(player1, player2, 5)
     game._board.fields = test_fields2
-    msg = 'Game won player with X'
+    msg = 'X'
     assert game.check_if_game_is_finished_left_right('X') == msg
     test_fields2['44']._sign = '-'
     assert not game.check_if_game_is_finished_left_right('X')
@@ -359,7 +371,7 @@ def test_check_if_game_is_finished_up_down():
     player2 = ('Human', 'Ann', "X", 'left-right')
     game = Game(player1, player2, 5)
     game._board.fields = test_fields3
-    msg = 'Game won player with O'
+    msg = 'O'
     assert game.check_if_game_is_finished_up_down('O') == msg
     test_fields3['42']._sign = '-'
     assert not game.check_if_game_is_finished_up_down('O')
@@ -367,18 +379,32 @@ def test_check_if_game_is_finished_up_down():
     assert not game.check_if_game_is_finished_up_down('O')
 
 
+def test_players_move_human():
+    player1 = ('Human', 'Kasia', "O", 'up-down')
+    player2 = ('Human', 'Ann', "X", 'left-right')
+    game = Game(player1, player2, 5)
+    game._board.fields = test_fields_sim
+    game.players_move(game._player1, 0, 0)
+    assert game._board.fields['00']._sign == "O"
+    assert not game._board.fields['00'].is_free
+
+
+def test_players_move_HeavyComputerPlayer():
+    player1 = ('Human', 'Kasia', "X", 'up-down')
+    player2 = ('3', 'Ann', "O", 'left-right')
+    game = Game(player1, player2, 5)
+    game._board.fields = test_fields4
+    game.players_move(game._player2, previous_letter=2, previous_number=0)
+    assert game._board.fields['22']._sign == "O"
+    assert not game._board.fields['22'].is_free
+
+
 def test_create_game_run():
     game_run = GameRun('Human', 5, "Kasia", "Computer")
     assert game_run._player1 == ('Human', "Kasia", 'X', 'left-right')
     assert game_run._player2 == ('Human', "Computer", 'O', 'up-down')
     assert game_run._game_mode == 'Human'
-    for key in test_fields_sim.keys():
-        assert test_fields_sim[key]._letter == game_run._game._board.fields[key]._letter
-        assert test_fields_sim[key]._number == game_run._game._board.fields[key]._number
-        assert test_fields_sim[key].is_free == game_run._game._board.fields[key].is_free
-        assert test_fields_sim[key]._sign == game_run._game._board.fields[key]._sign
-    assert game_run._game._board._size == 5
-    assert not game_run.result_of_game
+    assert str(game_run._game._board) == '   01234\n   OOOOO\nA X-X-X-X\nB XO-O-OX\nC X-X-X-X\nD XO-O-OX\nE X-X-X-X\n   OOOOO'
 
 
 # def test_moving_wrong_letter():
@@ -401,11 +427,3 @@ def test_create_game_run():
 #     game_run.making_moves('A0', game_run._game._player1)
 #     assert game_run._game._board.fields['00']._sign == game_run._game._player1._sign
 
-
-def test_players_move():
-    player1 = ('Human', 'Kasia', "O", 'up-down')
-    player2 = ('Human', 'Ann', "X", 'left-right')
-    game = Game(player1, player2, 5)
-    game._board.fields = test_fields_sim
-    game.players_move('0', '0', game._player1)
-    assert not game._board.fields['00'].is_free

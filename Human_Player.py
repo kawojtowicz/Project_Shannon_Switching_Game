@@ -43,7 +43,7 @@ class HumanPlayer:
         while letter == '':
             letter = input(f"{self.name}, enter letter of choosen field.")
             if len(letter) > 1:
-                print('"Please, enter one sign"')
+                print('Please, enter one sign')
                 letter = ''
             elif letter != '' and (ord(letter) < 65 or ord(letter) > edge):
                 print(f"Your first sign has to be letter A-{chr(edge)}")
@@ -53,18 +53,10 @@ class HumanPlayer:
             if len(number) != 1:
                 print('Please, choose one sign.')
                 number = ''
-            elif number != '' and ord(number) not in range(48, 58):
-                if (int(number) not in range(self._board_size + 1)):
-                    print(f"Your second sign has to be number 0-{edge1}")
-                    number = ''
+            elif number != '' and ord(number) not in range(48, 48 + self._board_size):
+                # if (int(number) not in range(self._board_size + 1)):
+                print(f"Your second sign has to be number 0-{edge1}")
+                number = ''
         letter = ord(letter) - 65
         number = int(number)
         return (letter, number)
-# try:
-#                 move1 = game._player1.give_letter_and_number()
-#             except :
-#                 key = f'{move1[0]}{move1[1]}'
-#                 if key not in game._board._fields.keys():
-#                     print("This field does not exist. Choose another one.")
-#                 elif not game._board._fields[key].is_free:
-#                     print("This field is not free. Please choose another one.")

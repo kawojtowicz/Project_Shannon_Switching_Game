@@ -2,15 +2,16 @@ from classes import GameRun
 
 
 def main():
-    msg = "\nThis is Shannon Switching Gale\nPlease, choose game mode:\n"
+    msg = "\nThis is Shannon Switching Gale\n"
     print(msg)
-    game_mode = input('1  -  human opponent\n2  -  easy computer opponent\n3  -  hard computer opponent\n')
+    game_mode = ''
+    while game_mode not in  ['1', '2', '3']:
+        msg = 'Please, choose game mode:\n'
+        msg += '1  -  human opponent\n2  -  easy computer opponent\n3  -  hard computer opponent\n'
+        game_mode = input(msg)
     board_size = ''
     while board_size not in [5, 7, 9]:
-        try:
-            board_size = int(input("Please, choose board size.\n5  -  small\n7  -  medium\n9  -  big\n"))
-        except:
-            print('Invlid board size.')
+        board_size = int(input("Please, choose board size.\n5  -  small\n7  -  medium\n9  -  big\n"))
     if game_mode == '1':
         name1 = ''
         name2 = ''
@@ -31,4 +32,8 @@ def main():
 
 
 if __name__ == '__main__':
-    print(main())
+    winner = main()
+    if not winner:
+        print('Game ended in a draw.')
+    else:
+        print(f'{winner} won. Congratulations!')
