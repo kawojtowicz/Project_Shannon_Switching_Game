@@ -325,11 +325,17 @@ class GameRun:
         lett, numb = \
             self._game._player2.give_letter_number(last_l, last_n, fields)
         self._game.player_move(self._game._player2, lett, numb, last_l, last_n)
+        print(str(self._game._board))
+        self.result_of_game = \
+            self._game.if_game_ended_up_down(self._game._player2._sign)
 
     def player2_turn_human_random(self):
         letter, number =\
             self._game._player2.give_letter_number()
         self._game.player_move(self._game._player2, letter, number)
+        print(str(self._game._board))
+        self.result_of_game = \
+            self._game.if_game_ended_up_down(self._game._player2._sign)
 
     def run_game(self):
         """Plays the game, returns name of the winner."""
@@ -340,9 +346,6 @@ class GameRun:
                     self.player2_turn_heavy(last_letter, last_number)
                 else:
                     self.player2_turn_human_random()
-                print(str(self._game._board))
-                self.result_of_game = \
-                    self._game.if_game_ended_up_down(self._game._player2._sign)
         result = self.result_of_game
         if result:
             if result == 'X':

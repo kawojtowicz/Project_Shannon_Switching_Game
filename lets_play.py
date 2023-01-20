@@ -7,7 +7,7 @@ def main():
     game_mode = ''
     while game_mode not in ['1', '2', '3']:
         msg = 'Please, choose game mode:\n1  -  human opponent\n'
-        msg += '2  -  easy computer opponent\n3  -  hard computer opponent\n'
+        msg += '2  -  easy computer opponent\n3  -  heavy computer opponent\n'
         game_mode = input(msg)
     board_size = ''
     while board_size not in [5, 7, 9]:

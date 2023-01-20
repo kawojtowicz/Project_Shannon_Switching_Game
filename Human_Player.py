@@ -43,7 +43,7 @@ class HumanPlayer:
         while not letter:
             letter = input(f"{self.name}, enter letter of choosen field.")
             if len(letter) > 1:
-                print('Please, enter one sign')
+                print('Please, enter one sign.')
                 letter = ''
             elif letter != '' and (ord(letter) < 65 or ord(letter) > edge):
                 print(f"Your first sign has to be letter A-{chr(edge)}")
@@ -55,7 +55,7 @@ class HumanPlayer:
                 print('Please, choose one sign.')
                 number = ''
             elif number != '' and ord(number) not in range(48, border):
-                print(f"Your second sign has to be number 0-{edge1}")
+                print(f"Your second sign has to be number 0-{edge1}.")
                 number = ''
         letter = ord(letter) - 65
         number = int(number)

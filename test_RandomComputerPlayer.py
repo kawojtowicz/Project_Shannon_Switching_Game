@@ -5,8 +5,8 @@ import pytest
 
 
 def test_create_RandomCopmuterPlayer_normal():
-    player = RandomComputerPlayer('name', 'O', 'up-down', 5)
-    assert player.name == 'name'
+    player = RandomComputerPlayer('pl_name', 'O', 'up-down', 5)
+    assert player.name == 'pl_name'
     assert player._moving == 'up-down'
     assert player._board_size == 5
     assert player._sign == 'O'

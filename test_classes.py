@@ -471,7 +471,7 @@ def test_create_game_run_EmptyNameError():
         GameRun('3', 7, '', 'Player 2')
 
 
-def give44(arg):
+def give44(arg, a='', b='', c='', d=''):
     return (4, 4)
 
 
@@ -496,3 +496,73 @@ def test_run_game_O_wins(monkeypatch):
     monkeypatch.setattr(HumanPlayer, 'give_letter_number', give44)
     monkeypatch.setattr(RandomComputerPlayer, 'give_letter_number', give43)
     assert game_run.run_game() == 'Computer Player'
+
+
+def test_player1_turn(monkeypatch):
+    game_run = GameRun('2', 5, 'name')
+    game_run._game._board.fields = test_fields_sim
+    monkeypatch.setattr(HumanPlayer, 'give_letter_number', give44)
+    tuple = game_run.player1_turn()
+    assert game_run._game._board.fields['44']._sign == 'X'
+    assert not game_run._game._board.fields['44'].is_free
+    assert not game_run.result_of_game
+    assert tuple == (4, 4)
+
+
+def test_player1_turn_end(monkeypatch):
+    game_run = GameRun('2', 5, 'name')
+    game_run._game._board.fields = test_fields2
+    test_fields2['44']._sign = '-'
+    test_fields2['44'].is_free = True
+    monkeypatch.setattr(HumanPlayer, 'give_letter_number', give44)
+    tuple = game_run.player1_turn()
+    assert game_run._game._board.fields['44']._sign == 'X'
+    assert not game_run._game._board.fields['44'].is_free
+    assert game_run.result_of_game
+    assert tuple == (4, 4)
+
+
+def test_player2_turn_hevy(monkeypatch):
+    game_run = GameRun('3', 5, 'name')
+    monkeypatch.setattr(HeavyComputerPlayer, 'give_letter_number', give44)
+    game_run.player2_turn_heavy(4, 2)
+    assert game_run._game._board.fields['44']._sign == 'O'
+    assert not game_run._game._board.fields['44'].is_free
+    assert not game_run.result_of_game
+
+
+def give42(arg, b='', c='', d=''):
+    return (4, 2)
+
+
+def test_player2_turn_end_heavy(monkeypatch):
+    game_run = GameRun('3', 5, 'name')
+    test_fields3['42']._sign = '-'
+    test_fields3['42'].is_free = True
+    game_run._game._board.fields = test_fields3
+    monkeypatch.setattr(HeavyComputerPlayer, 'give_letter_number', give42)
+    game_run.player2_turn_heavy(4, 4)
+    assert game_run._game._board.fields['42']._sign == 'O'
+    assert not game_run._game._board.fields['42'].is_free
+    assert game_run.result_of_game
+
+
+def test_player2_turn_human_random(monkeypatch):
+    game_run = GameRun('2', 5, 'name')
+    monkeypatch.setattr(RandomComputerPlayer, 'give_letter_number', give44)
+    game_run.player2_turn_human_random()
+    assert game_run._game._board.fields['44']._sign == 'O'
+    assert not game_run._game._board.fields['44'].is_free
+    assert not game_run.result_of_game
+
+
+def test_player2_turn_end_human_random(monkeypatch):
+    game_run = GameRun('2', 5, 'name')
+    test_fields3['42']._sign = '-'
+    test_fields3['42'].is_free = True
+    game_run._game._board.fields = test_fields3
+    monkeypatch.setattr(RandomComputerPlayer, 'give_letter_number', give42)
+    game_run.player2_turn_human_random()
+    assert game_run._game._board.fields['42']._sign == 'O'
+    assert not game_run._game._board.fields['42'].is_free
+    assert game_run.result_of_game
