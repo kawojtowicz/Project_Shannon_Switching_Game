@@ -33,7 +33,4 @@ def main():
 
 if __name__ == '__main__':
     winner = main()
-    if not winner:
-        print('Game ended in a draw.')
-    else:
-        print(f'{winner} won. Congratulations!')
+    print(f'{winner} won. Congratulations!')

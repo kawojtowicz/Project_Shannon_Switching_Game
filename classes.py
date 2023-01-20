@@ -8,64 +8,63 @@ class InvalidSizeError(ValueError):
 
 
 class EvenSizeError(ValueError):
-    pass
+    'Size of board cannot be even.'
 
 
 class InvalidLetterError(ValueError):
-    pass
+    'Letter of field has to be in range A-I.'
 
 
 class InvalidNumberError(ValueError):
-    pass
+    'Number of field has to be in range 0-9.'
 
 
 class InvalidSignError(ValueError):
-    pass
+    'Sign of a field has to be - or X or O.'
 
 
 class InvalidIsFreeTypeError(ValueError):
-    pass
-
-
-class InvalidFieldError(ValueError):
-    pass
+    'is_free has to be bool type.'
 
 
 class FieldDoesNotExistError(ValueError):
-    pass
+    'Given field does not exist.'
 
 
 class FieldIsTakenError(ValueError):
-    pass
+    'This field is not free.'
 
 
 class InvalidPlayersClassError(ValueError):
-    pass
+    "Unknown player's class."
 
 
 class InvalidNameTypeError(ValueError):
-    pass
+    'Name has to be str type.'
 
 
 class EmptyNameError(ValueError):
-    pass
+    'Name cannot be empty.'
 
 
 class MovingTypeError(ValueError):
-    pass
+    'Moving type has to be up-down or left-right.'
+
+
+class GameModeError(ValueError):
+    'Game mode has to be 2, 3 or Human.'
 
 
 class Field:
     def __init__(self, letter, number, is_free=True, sign='-'):
         if letter not in range(10):
-            raise InvalidLetterError('Letter of field has to be in range A-I.')
+            raise InvalidLetterError()
         if number not in range(10):
-            msg = 'Number of field has to be in range 0-9.'
-            raise InvalidNumberError(msg)
+            raise InvalidNumberError()
         if sign not in ['-', 'X', 'O']:
-            raise InvalidSignError('Sign of a field has to be - or X or O.')
+            raise InvalidSignError()
         if type(is_free) != bool:
-            raise InvalidIsFreeTypeError('is_free has to be bool type.')
+            raise InvalidIsFreeTypeError()
         self._number = number
         self._letter = letter
         self.is_free = is_free
@@ -76,7 +75,7 @@ class Field:
 
     def set_sign(self, new_sign):
         if new_sign not in ['-', 'X', 'O']:
-            raise InvalidSignError('Sign of a field has to be - or X or O.')
+            raise InvalidSignError()
         self._sign = new_sign
         if new_sign != '-':
             self.is_free = False
@@ -88,7 +87,7 @@ class Board:
             msg = 'Size of board should be bigger than 4 and lesser than 10.'
             raise InvalidSizeError(msg)
         if size % 2 == 0:
-            raise EvenSizeError('Size of board cannot be even.')
+            raise EvenSizeError()
         self._size = size
         self.fields = {}
         for letter in range(self._size):
@@ -102,9 +101,9 @@ class Board:
     def move(self, letter, number, sign):
         key = f"{letter}{number}"
         if key not in self.fields.keys():
-            raise FieldDoesNotExistError('Given field does not exist.')
+            raise FieldDoesNotExistError()
         if not self.fields[key].is_free:
-            raise FieldIsTakenError('This field is not free.')
+            raise FieldIsTakenError()
         self.fields[key].set_sign(sign)
 
     def __str__(self):
@@ -133,17 +132,16 @@ class Game:
             msg = 'Size of board should be bigger than 5 and lesser than 10.'
             raise InvalidSizeError(msg)
         if pl1_inf[0] not in ['Human', '2', '3'] or pl2_inf[0] not in ['Human', '2', '3']:
-            raise InvalidPlayersClassError("Unknown player's class.")
+            raise InvalidPlayersClassError()
         if type(pl1_inf[1]) != str or type(pl2_inf[1]) != str:
-            raise InvalidNameTypeError('Name has to be str type.')
+            raise InvalidNameTypeError()
         if not pl2_inf[1] or not pl1_inf[1]:
-            raise EmptyNameError('Name cannot be empty.')
+            raise EmptyNameError()
         if pl2_inf[2] not in ['X', 'O'] or pl1_inf[2] not in ["X", 'O']:
-            raise InvalidSignError("Player's sign has to be 'X' or 'O'.")
+            raise InvalidSignError()
         moving = ['up-down', 'left-right']
         if pl2_inf[3] not in moving or pl1_inf[3] not in moving:
-            msg1 = 'Moving type has to be up-down or left-right.'
-            raise MovingTypeError(msg1)
+            raise MovingTypeError()
         self._board = Board(board_size)
         name1 = pl1_inf[1]
         name2 = pl2_inf[1]
@@ -258,6 +256,14 @@ class Game:
 
 class GameRun:
     def __init__(self, game_mode, board_size, name1='Player1', name2='Player2'):
+        if game_mode not in ['Human', '2', '3']:
+            raise GameModeError()
+        if board_size not in [5, 7, 9]:
+            raise InvalidSizeError('Size has to be 5, 7 or 9.')
+        if type(name1) != str or type(name2) != str:
+            raise InvalidNameTypeError()
+        if not name1 or not name2:
+            raise EmptyNameError()
         self._game_mode = game_mode
         self._player1 = ('Human', name1, 'X', 'left-right')
         self._player2 = (self._game_mode, name2, 'O', 'up-down')
@@ -287,5 +293,4 @@ class GameRun:
                 return self._game._player1.name
             else:
                 return self._game._player2.name
-        else:
-            return result
+

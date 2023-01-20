@@ -3,7 +3,11 @@ from classes import InvalidSizeError, EvenSizeError, InvalidSignError
 from classes import InvalidIsFreeTypeError, InvalidLetterError
 from classes import InvalidNumberError, FieldDoesNotExistError
 from classes import FieldIsTakenError, InvalidPlayersClassError
+from classes import GameModeError
 from classes import InvalidNameTypeError, EmptyNameError, MovingTypeError
+from HeavyComputerPlayer import HeavyComputerPlayer
+from RandomComputerPlayer import RandomComputerPlayer
+from Human_Player import HumanPlayer
 import pytest
 
 
@@ -86,6 +90,28 @@ test_fields4 = {
 
         '40': Field(4, 0), '41': Field(4, 1, False, 'X'),
         '42': Field(4, 2),
+        '43': Field(4, 3, False, 'X'), '44': Field(4, 4, False, 'X')
+    }
+
+test_fields5 = {
+        '00': Field(0, 0), '01': Field(0, 1, False, 'X'),
+        '02': Field(0, 2, False, 'O'),
+        '03': Field(0, 3, False, 'X'), '04': Field(0, 4),
+
+        '10': Field(1, 0, False, 'O'), '11': Field(1, 1, False, 'X'),
+        '12': Field(1, 2, False, 'O'),
+        '13': Field(1, 3, False, 'X'), '14': Field(1, 4, False, 'O'),
+
+        '20': Field(2, 0, False, 'X'), '21': Field(2, 1, False, 'X'),
+        '22': Field(2, 2, False, 'O'),
+        '23': Field(2, 3, False, 'X'), '24': Field(2, 4, False, 'O'),
+
+        '30': Field(3, 0, False, 'O'), '31': Field(3, 1, False, 'O'),
+        '32': Field(3, 2, False, 'O'),
+        '33': Field(3, 3, False, 'X'), '34': Field(3, 4, False, 'O'),
+
+        '40': Field(4, 0), '41': Field(4, 1, False, 'X'),
+        '42': Field(4, 2, False, 'X'),
         '43': Field(4, 3, False, 'X'), '44': Field(4, 4, False, 'X')
     }
 
@@ -379,7 +405,7 @@ def test_check_if_game_is_finished_up_down():
     assert not game.check_if_game_is_finished_up_down('O')
 
 
-def test_players_move_human():
+def test_players_move_HumanPlayer():
     player1 = ('Human', 'Kasia', "O", 'up-down')
     player2 = ('Human', 'Ann', "X", 'left-right')
     game = Game(player1, player2, 5)
@@ -389,12 +415,27 @@ def test_players_move_human():
     assert not game._board.fields['00'].is_free
 
 
-def test_players_move_HeavyComputerPlayer():
+def test_players_move_HeavyComputerPlayer_field_free():
     player1 = ('Human', 'Kasia', "X", 'up-down')
     player2 = ('3', 'Ann', "O", 'left-right')
     game = Game(player1, player2, 5)
     game._board.fields = test_fields4
-    game.players_move(game._player2, previous_letter=2, previous_number=0)
+    game.players_move(game._player2, 2, 4)
+    assert game._board.fields['24']._sign == "O"
+    assert not game._board.fields['24'].is_free
+
+
+def give00(self, previous_letter, previous_numer, fields):
+    return (0, 0)
+
+
+def test_players_move_HeavyComputerPlayer_field_taken(monkeypatch):
+    player1 = ('Human', 'Kasia', "X", 'up-down')
+    player2 = ('3', 'Ann', "O", 'left-right')
+    game = Game(player1, player2, 5)
+    game._board.fields = test_fields5
+    monkeypatch.setattr(HeavyComputerPlayer, 'give_letter_and_number', give00)
+    game.players_move(game._player2, 1, 1, 2, 2)
     assert game._board.fields['22']._sign == "O"
     assert not game._board.fields['22'].is_free
 
@@ -407,23 +448,49 @@ def test_create_game_run():
     assert str(game_run._game._board) == '   01234\n   OOOOO\nA X-X-X-X\nB XO-O-OX\nC X-X-X-X\nD XO-O-OX\nE X-X-X-X\n   OOOOO'
 
 
-# def test_moving_wrong_letter():
-#     game_run = GameRun("Human", 5, 'Kasia', "Player")
-#     assert game_run.making_moves("72", game_run._game._player1) == 'wrong letter'
+def test_create_game_run_GameModeError():
+    with pytest.raises(GameModeError):
+        GameRun(9, 7, 'Kasia', 'Player 2')
 
 
-# def test_moving_wrong_number():
-#     game_run = GameRun("Human", 5, 'Kasia', "Player")
-#     assert game_run.making_moves("A9", game_run._game._player1) == 'invalid number'
+def test_create_game_run_InvalidSizeError():
+    with pytest.raises(InvalidSizeError):
+        GameRun('2', 99, 'Kasia', 'Player 2')
 
 
-# def test_moving_invalid_length():
-#     game_run = GameRun("Human", 5, 'Kasia', "Player")
-#     assert game_run.making_moves("A33", game_run._game._player1) == 'invalid length'
+def test_create_game_run_InvalidNameTypeError():
+    with pytest.raises(InvalidNameTypeError):
+        GameRun('3', 7, 8, 'Player 2')
 
 
-# def test_moving_normal():
-#     game_run = GameRun("Human", 5, "Kasia", "PL")
-#     game_run.making_moves('A0', game_run._game._player1)
-#     assert game_run._game._board.fields['00']._sign == game_run._game._player1._sign
+def test_create_game_run_EmptyNameError():
+    with pytest.raises(EmptyNameError):
+        GameRun('3', 7, '', 'Player 2')
+
+
+def give44(arg):
+    return (4, 4)
+
+
+def test_run_game_X_wins(monkeypatch):
+    game_run = GameRun("2", 5, "Kasia", "Ola")
+    test_fields2['44'].set_sign('-')
+    test_fields2['44'].is_free = True
+    game_run._game._board.fields = test_fields2
+    monkeypatch.setattr(HumanPlayer, 'give_letter_and_number', give44)
+    assert game_run.run_game() == 'Kasia'
+
+
+def give43(self):
+    return (4, 3)
+
+
+def test_run_game_O_wins(monkeypatch):
+    game_run = GameRun("2", 5, "Kasia", "Ola")
+    test_fields3['43'].set_sign('-')
+    test_fields3['43'].is_free = True
+    game_run._game._board.fields = test_fields3
+    monkeypatch.setattr(HumanPlayer, 'give_letter_and_number', give44)
+    monkeypatch.setattr(RandomComputerPlayer, 'give_letter_and_number', give43)
+    assert game_run.run_game() == 'Computer Player'
 
