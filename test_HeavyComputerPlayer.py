@@ -59,55 +59,55 @@ def test_take_near_field_not_free():
     assert not player.take_near_field(0, 0, test_fields_sim)
 
 
-def test_give_letter_and_number_not_free_right():
+def test_give_letter_number_not_free_right():
     player = HeavyComputerPlayer('name', 'O', 'up-down', 5)
-    assert player.give_letter_and_number(2, 2, test_fields_sim) == (2, 4)
+    assert player.give_letter_number(2, 2, test_fields_sim) == (2, 4)
 
 
-def test_give_letter_and_number_not_free_left():
+def test_give_letter_number_not_free_left():
     player = HeavyComputerPlayer('name', 'O', 'up-down', 5)
     test_fields_sim['24'].is_free = False
-    assert player.give_letter_and_number(2, 2, test_fields_sim) == (2, 0)
+    assert player.give_letter_number(2, 2, test_fields_sim) == (2, 0)
 
 
-def test_give_letter_and_number_not_free_down():
+def test_give_letter_number_not_free_down():
     player = HeavyComputerPlayer('name', 'O', 'up-down', 5)
     test_fields_sim['20'].is_free = False
     test_fields_sim['24'].is_free = False
-    assert player.give_letter_and_number(2, 2, test_fields_sim) == (4, 2)
+    assert player.give_letter_number(2, 2, test_fields_sim) == (4, 2)
 
 
-def test_give_letter_and_number_not_free_up():
+def test_give_letter_number_not_free_up():
     player = HeavyComputerPlayer('name', 'O', 'up-down', 5)
     test_fields_sim['20'].is_free = False
     test_fields_sim['24'].is_free = False
     test_fields_sim['42'].is_free = False
-    assert player.give_letter_and_number(2, 2, test_fields_sim) == (0, 2)
+    assert player.give_letter_number(2, 2, test_fields_sim) == (0, 2)
 
 
-def test_give_letter_and_number_edge_right():
+def test_give_letter_number_edge_right():
     player = HeavyComputerPlayer('name', 'O', 'up-down', 5)
-    assert player.give_letter_and_number(2, 4, test_fields_sim) == (2, 2)
+    assert player.give_letter_number(2, 4, test_fields_sim) == (2, 2)
 
 
-def test_give_letter_and_number_edge_left():
+def test_give_letter_number_edge_left():
     player = HeavyComputerPlayer('name', 'O', 'up-down', 5)
-    assert player.give_letter_and_number(2, 0, test_fields_sim) == (2, 2)
+    assert player.give_letter_number(2, 0, test_fields_sim) == (2, 2)
 
 
-def test_give_letter_and_number_edge_down():
+def test_give_letter_number_edge_down():
     player = HeavyComputerPlayer('name', 'O', 'up-down', 5)
     test_fields_sim['31'].is_free = False
-    assert player.give_letter_and_number(3, 3, test_fields_sim) == (1, 3)
+    assert player.give_letter_number(3, 3, test_fields_sim) == (1, 3)
 
 
 def give4(a, b):
     return 4
 
 
-def test_give_letter_and_number_edge_up(monkeypatch):
+def test_give_letter_number_edge_up(monkeypatch):
     player = HeavyComputerPlayer('name', 'O', 'up-down', 5)
     test_fields_sim['31'].is_free = False
     test_fields_sim['13'].is_free = False
     monkeypatch.setattr('HeavyComputerPlayer.randint', give4)
-    assert player.give_letter_and_number(1, 1, test_fields_sim) == (4, 4)
+    assert player.give_letter_number(1, 1, test_fields_sim) == (4, 4)

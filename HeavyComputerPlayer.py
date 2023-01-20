@@ -14,6 +14,8 @@ class MovingError(ValueError):
 
 
 class HeavyComputerPlayer:
+    """Represents player who choose letter and number of the field\
+         according to simple criteria."""
     def __init__(self, name, pl_sign, moving, board_size):
         if type(pl_sign) != str:
             raise SignNotStringError("Player's sign has to be string type.")
@@ -34,7 +36,7 @@ class HeavyComputerPlayer:
         else:
             return False
 
-    def give_letter_and_number(self, previous_letter, previous_number, fields):
+    def give_letter_number(self, previous_letter, previous_number, fields):
         fields_to_check = [
             (previous_letter, previous_number + 2),
             (previous_letter, previous_number - 2),

@@ -14,6 +14,7 @@ class MovingError(ValueError):
 
 
 class RandomComputerPlayer:
+    """Represents player who draws letter ans number of the field."""
     def __init__(self, name, pl_sign, moving, board_size):
         if type(pl_sign) != str:
             raise SignNotStringError("Player's sign has to be string type.")
@@ -27,7 +28,7 @@ class RandomComputerPlayer:
         self.name = name
         self._board_size = board_size
 
-    def give_letter_and_number(self, letter='', number=''):
+    def give_letter_number(self, letter='', number=''):
         letter = randint(0, self._board_size - 1)
         number = randint(0, self._board_size - 1)
         return (letter, number)

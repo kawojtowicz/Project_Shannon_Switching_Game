@@ -31,7 +31,7 @@ def give4(a, b):
     return 4
 
 
-def test_give_letter_and_number(monkeypatch):
+def test_give_letter_number(monkeypatch):
     player = RandomComputerPlayer('name', 'O', 'up-down', 5)
     monkeypatch.setattr('RandomComputerPlayer.randint', give4)
-    assert player.give_letter_and_number() == (4, 4)
+    assert player.give_letter_number() == (4, 4)

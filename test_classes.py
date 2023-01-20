@@ -380,48 +380,48 @@ def test_move_in_checking_up_down():
     assert fields_in_after == ['12', '13', '14']
 
 
-def test_check_if_game_is_finished_left_right():
+def test_if_game_ended_left_right():
     player1 = ('Human', 'Kasia', "X", 'up-down')
     player2 = ('Human', 'Ann', "O", 'left-right')
     game = Game(player1, player2, 5)
     game._board.fields = test_fields2
     msg = 'X'
-    assert game.check_if_game_is_finished_left_right('X') == msg
+    assert game.if_game_ended_left_right('X') == msg
     test_fields2['44']._sign = '-'
-    assert not game.check_if_game_is_finished_left_right('X')
+    assert not game.if_game_ended_left_right('X')
     test_fields2['44']._sign = 'O'
-    assert not game.check_if_game_is_finished_left_right('X')
+    assert not game.if_game_ended_left_right('X')
 
 
-def test_check_if_game_is_finished_up_down():
+def test_if_game_ended_up_down():
     player1 = ('Human', 'Kasia', "O", 'up-down')
     player2 = ('Human', 'Ann', "X", 'left-right')
     game = Game(player1, player2, 5)
     game._board.fields = test_fields3
     msg = 'O'
-    assert game.check_if_game_is_finished_up_down('O') == msg
+    assert game.if_game_ended_up_down('O') == msg
     test_fields3['42']._sign = '-'
-    assert not game.check_if_game_is_finished_up_down('O')
+    assert not game.if_game_ended_up_down('O')
     test_fields2['42']._sign = 'X'
-    assert not game.check_if_game_is_finished_up_down('O')
+    assert not game.if_game_ended_up_down('O')
 
 
-def test_players_move_HumanPlayer():
+def test_player_move_HumanPlayer():
     player1 = ('Human', 'Kasia', "O", 'up-down')
     player2 = ('Human', 'Ann', "X", 'left-right')
     game = Game(player1, player2, 5)
     game._board.fields = test_fields_sim
-    game.players_move(game._player1, 0, 0)
+    game.player_move(game._player1, 0, 0)
     assert game._board.fields['00']._sign == "O"
     assert not game._board.fields['00'].is_free
 
 
-def test_players_move_HeavyComputerPlayer_field_free():
+def test_player_move_HeavyComputerPlayer_field_free():
     player1 = ('Human', 'Kasia', "X", 'up-down')
     player2 = ('3', 'Ann', "O", 'left-right')
     game = Game(player1, player2, 5)
     game._board.fields = test_fields4
-    game.players_move(game._player2, 2, 4)
+    game.player_move(game._player2, 2, 4)
     assert game._board.fields['24']._sign == "O"
     assert not game._board.fields['24'].is_free
 
@@ -430,13 +430,13 @@ def give00(self, previous_letter, previous_numer, fields):
     return (0, 0)
 
 
-def test_players_move_HeavyComputerPlayer_field_taken(monkeypatch):
+def test_player_move_HeavyComputerPlayer_field_taken(monkeypatch):
     player1 = ('Human', 'Kasia', "X", 'up-down')
     player2 = ('3', 'Ann', "O", 'left-right')
     game = Game(player1, player2, 5)
     game._board.fields = test_fields5
-    monkeypatch.setattr(HeavyComputerPlayer, 'give_letter_and_number', give00)
-    game.players_move(game._player2, 1, 1, 2, 2)
+    monkeypatch.setattr(HeavyComputerPlayer, 'give_letter_number', give00)
+    game.player_move(game._player2, 1, 1, 2, 2)
     assert game._board.fields['22']._sign == "O"
     assert not game._board.fields['22'].is_free
 
@@ -480,7 +480,7 @@ def test_run_game_X_wins(monkeypatch):
     test_fields2['44'].set_sign('-')
     test_fields2['44'].is_free = True
     game_run._game._board.fields = test_fields2
-    monkeypatch.setattr(HumanPlayer, 'give_letter_and_number', give44)
+    monkeypatch.setattr(HumanPlayer, 'give_letter_number', give44)
     assert game_run.run_game() == 'Kasia'
 
 
@@ -493,6 +493,6 @@ def test_run_game_O_wins(monkeypatch):
     test_fields3['43'].set_sign('-')
     test_fields3['43'].is_free = True
     game_run._game._board.fields = test_fields3
-    monkeypatch.setattr(HumanPlayer, 'give_letter_and_number', give44)
-    monkeypatch.setattr(RandomComputerPlayer, 'give_letter_and_number', give43)
+    monkeypatch.setattr(HumanPlayer, 'give_letter_number', give44)
+    monkeypatch.setattr(RandomComputerPlayer, 'give_letter_number', give43)
     assert game_run.run_game() == 'Computer Player'

@@ -56,6 +56,12 @@ class GameModeError(ValueError):
 
 
 class Field:
+    """
+    Represents field on a board.
+    Attributes:
+    -location attributes: letter and number
+    -sign, is_free: say if one of players took the field or it is free.
+    """
     def __init__(self, letter, number, is_free=True, sign='-'):
         if letter not in range(10):
             raise InvalidLetterError()
@@ -82,6 +88,7 @@ class Field:
 
 
 class Board:
+    """Represents board of the game. Has a size attribute."""
     def __init__(self, size):
         if size > 9 or size < 5 or type(size) != int:
             msg = 'Size of board should be bigger than 4 and lesser than 10.'
@@ -99,6 +106,7 @@ class Board:
                     self.fields[f"{letter}{number}"].set_sign('O')
 
     def move(self, letter, number, sign):
+        """Changes sign of one of fields."""
         key = f"{letter}{number}"
         if key not in self.fields.keys():
             raise FieldDoesNotExistError()
@@ -124,6 +132,7 @@ class Board:
 
 
 class Game:
+    """Represents game as a connection players and in certain state."""
     def __init__(self, pl1_inf, pl2_inf, board_size):
         # player is a tuple: (class, name, sign, moving)
         b_siz = board_size
@@ -158,6 +167,7 @@ class Game:
             self._player2 = HeavyComputerPlayer(nm, sign2, pl1_inf[3], b_siz)
 
     def up_down_connected(self, fields_dict, pl_sign, fields_in):
+        """Adds to the list fields which are up/down connected with given."""
         for key in fields_in:
             if f'{int(key[0]) + 1}{key[1]}' in fields_dict.keys():
                 if fields_dict[f'{int(key[0]) + 1}{key[1]}']._sign == pl_sign:
@@ -170,6 +180,8 @@ class Game:
         return fields_in
 
     def left_right_connected(self, fields_dict, pl_sign, fields_in):
+        """Adds to the list fields which are left/right connected\
+             with given."""
         for key in fields_in:
             if f'{key[0]}{int(key[1]) + 1}' in fields_dict.keys():
                 if fields_dict[f'{key[0]}{int(key[1]) + 1}']._sign == pl_sign:
@@ -182,6 +194,10 @@ class Game:
         return fields_in
 
     def move_on_or_end_left_right(self, fields_in, pl_sign, fields_dict):
+        """Checks if there is a field which touches the right edge.\
+             If so, returns player's sign.
+         If there is not, returns list of fields of next column connected \
+            with one of given fields."""
         new_fields_in = []
         for key in fields_in:
             if key[1] == f'{self._board._size - 1}':
@@ -191,6 +207,10 @@ class Game:
         return new_fields_in
 
     def move_on_or_end_up_down(self, fields_in, pl_sign, fields_dict):
+        """Checks if there is a field which touches the down edge.\
+             If so, returns player's sign.
+         If there is not, returns list of fields of next line connected \
+            with one of given fields."""
         new_fields_in = []
         for key in fields_in:
             if key[0] == f'{self._board._size - 1}':
@@ -200,6 +220,8 @@ class Game:
         return new_fields_in
 
     def move_in_checking_left_right(self, fields, fields_in, pl_sign):
+        """Makes move in right and returns next fields \
+            to check or returns sign of winner."""
         fields_in = self.move_on_or_end_left_right(fields_in, pl_sign, fields)
         if type(fields_in) == str:
             return fields_in
@@ -207,13 +229,18 @@ class Game:
         return fields_in
 
     def move_in_checking_up_down(self, fields, fields_in, pl_sign):
+        """Makes move in down and returns next fields \
+            to check or returns sign of winner."""
         fields_in = self.move_on_or_end_up_down(fields_in, pl_sign, fields)
         if type(fields_in) == str:
             return fields_in
         fields_in = self.left_right_connected(fields, pl_sign, fields_in)
         return fields_in
 
-    def check_if_game_is_finished_left_right(self, pl_sign):
+    def if_game_ended_left_right(self, pl_sign):
+        """Checks if game is won by player who moves left-right \
+            and if so returns winner's sign.
+            If game if not finished returns False."""
         fields_in = []
         fields = self._board.fields
         for letter in range(self._board._size):
@@ -227,7 +254,10 @@ class Game:
         # game in not finished yet:
         return False
 
-    def check_if_game_is_finished_up_down(self, pl_sign):
+    def if_game_ended_up_down(self, pl_sign):
+        """Checks if game is won by player who moves up-down \
+            and if so returns winner's sign.
+            If game if not finished returns False."""
         fields_in = []
         fields = self._board.fields
         for number in range(self._board._size):
@@ -241,27 +271,36 @@ class Game:
         # game in not finished yet:
         return False
 
-    def players_move(self, player, letter='', number='', previous_letter='', previous_number=''):
+    def player_move(self, player, lett='', numb='', pr_lett='', pr_numb=''):
+        """Takes letter and number of a field from the player \
+            and sets his sign on it. """
         if type(player) is HeavyComputerPlayer:
-            while not self._board.fields[f'{letter}{number}'].is_free:
-                letter, number = \
-                    player.give_letter_and_number(previous_letter, previous_number, self._board.fields)
-            if self._board.fields[f'{letter}{number}'].is_free:
-                self._board.fields[f'{letter}{number}'].set_sign(player._sign)
+            while not self._board.fields[f'{lett}{numb}'].is_free:
+                b_fields = self._board.fields
+                lett, numb = \
+                    player.give_letter_number(pr_lett, pr_numb, b_fields)
+            if self._board.fields[f'{lett}{numb}'].is_free:
+                self._board.fields[f'{lett}{numb}'].set_sign(player._sign)
         else:
-            while not self._board.fields[f'{letter}{number}'].is_free:
-                if type(player)is HumanPlayer:
+            while not self._board.fields[f'{lett}{numb}'].is_free:
+                if type(player) is HumanPlayer:
                     print('This field is not free. Choose another.')
-                letter, number = player.give_letter_and_number()
-        if self._board.fields[f'{letter}{number}'].is_free:
-            self._board.fields[f'{letter}{number}'].set_sign(player._sign)
+                lett, numb = player.give_letter_number()
+        if self._board.fields[f'{lett}{numb}'].is_free:
+            self._board.fields[f'{lett}{numb}'].set_sign(player._sign)
 
 
 class GameRun:
-    def __init__(self, game_mode, board_size, name1='Player1', name2='Player2'):
+    """Represents particular gameplay.
+    Attributes:
+    -game_mode: information which decides about opponent's class
+    -player1, player2: players of the game
+    -game: connection between players, board
+    -result_of_game: says if gameplay is already finished."""
+    def __init__(self, game_mode, board_siz, name1='Player1', name2='Player2'):
         if game_mode not in ['Human', '2', '3']:
             raise GameModeError()
-        if board_size not in [5, 7, 9]:
+        if board_siz not in [5, 7, 9]:
             raise InvalidSizeError('Size has to be 5, 7 or 9.')
         if type(name1) != str or type(name2) != str:
             raise InvalidNameTypeError()
@@ -270,27 +309,40 @@ class GameRun:
         self._game_mode = game_mode
         self._player1 = ('Human', name1, 'X', 'left-right')
         self._player2 = (self._game_mode, name2, 'O', 'up-down')
-        self._game = Game(self._player1, self._player2, board_size)
+        self._game = Game(self._player1, self._player2, board_siz)
         self.result_of_game = False
 
+    def player1_turn(self):
+        letter, number = self._game._player1.give_letter_number()
+        self._game.player_move(self._game._player1, letter, number)
+        print(str(self._game._board))
+        self.result_of_game = \
+            self._game.if_game_ended_left_right(self._game._player1._sign)
+        return (letter, number)
+
+    def player2_turn_heavy(self, last_l, last_n):
+        fields = self._game._board.fields
+        lett, numb = \
+            self._game._player2.give_letter_number(last_l, last_n, fields)
+        self._game.player_move(self._game._player2, lett, numb, last_l, last_n)
+
+    def player2_turn_human_random(self):
+        letter, number =\
+            self._game._player2.give_letter_number()
+        self._game.player_move(self._game._player2, letter, number)
+
     def run_game(self):
-        # to edit
+        """Plays the game, returns name of the winner."""
         while not self.result_of_game:
-            letter, number = self._game._player1.give_letter_and_number()
-            self._game.players_move(self._game._player1, letter, number)
-            print(str(self._game._board))
-            self.result_of_game = self._game.check_if_game_is_finished_left_right(self._game._player1._sign)
+            last_letter, last_number = self.player1_turn()
             if not self.result_of_game:
                 if type(self._game._player2) is HeavyComputerPlayer:
-                    previous_letter, previous_number = letter, number
-                    letter, number = self._game._player2.give_letter_and_number(previous_letter, previous_number, self._game._board.fields)
-                    self._game.players_move(self._game._player2, letter, number, previous_letter, previous_number)
+                    self.player2_turn_heavy(last_letter, last_number)
                 else:
-                    letter, number =\
-                         self._game._player2.give_letter_and_number()
-                    self._game.players_move(self._game._player2, letter, number)
+                    self.player2_turn_human_random()
                 print(str(self._game._board))
-                self.result_of_game = self._game.check_if_game_is_finished_up_down(self._game._player2._sign)
+                self.result_of_game = \
+                    self._game.if_game_ended_up_down(self._game._player2._sign)
         result = self.result_of_game
         if result:
             if result == 'X':

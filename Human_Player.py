@@ -23,6 +23,7 @@ class MovingError(ValueError):
 
 
 class HumanPlayer:
+    """Represents player who plays typing letter and number on the keyboard."""
     def __init__(self, name, pl_sign, moving, board_size):
         if type(pl_sign) != str:
             raise SignNotStringError("Player's sign has to be string type.")
@@ -36,7 +37,7 @@ class HumanPlayer:
         self.name = name
         self._board_size = board_size
 
-    def give_letter_and_number(self, letter='', number=''):
+    def give_letter_number(self, letter='', number=''):
         edge = 64 + self._board_size
         edge1 = self._board_size - 1
         while not letter:
@@ -54,7 +55,6 @@ class HumanPlayer:
                 print('Please, choose one sign.')
                 number = ''
             elif number != '' and ord(number) not in range(48, border):
-                # if (int(number) not in range(self._board_size + 1)):
                 print(f"Your second sign has to be number 0-{edge1}")
                 number = ''
         letter = ord(letter) - 65
