@@ -35,7 +35,6 @@ class HumanPlayer:
         self._moving = moving
         self.name = name
         self._board_size = board_size
-        # to edit
 
     def give_letter_and_number(self, letter='', number=''):
         edge = 64 + self._board_size
