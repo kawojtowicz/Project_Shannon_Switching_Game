@@ -548,7 +548,7 @@ def test_player2_turn_end_heavy(monkeypatch):
 
 
 def test_player2_turn_human_random(monkeypatch):
-    game_run = GameRun('2', 5, 'pl_name')
+    game_run = GameRun('2', 5, 'pl_nam')
     monkeypatch.setattr(RandomComputerPlayer, 'give_letter_number', give44)
     game_run.player2_turn_human_random()
     assert game_run._game._board.fields['44']._sign == 'O'

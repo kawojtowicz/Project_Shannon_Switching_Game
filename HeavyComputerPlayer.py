@@ -23,7 +23,7 @@ class HeavyComputerPlayer:
             raise NameNotStringError('Name has to be string type.')
         self._sign = pl_sign
         if moving != 'up-down' and moving != 'left-right':
-            msg = "Player's moving has to be up-down or left-right. "
+            msg = "Player's moving has to be up-down or left-right."
             raise MovingError(msg)
         self._moving = moving
         self.name = name

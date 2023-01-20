@@ -96,7 +96,7 @@ def test_give_letter_number_edge_left():
 
 
 def test_give_letter_number_edge_down():
-    player = HeavyComputerPlayer('plname', 'O', 'up-down', 5)
+    player = HeavyComputerPlayer('pname', 'O', 'up-down', 5)
     test_fields_sim['31'].is_free = False
     assert player.give_letter_number(3, 3, test_fields_sim) == (1, 3)
 
