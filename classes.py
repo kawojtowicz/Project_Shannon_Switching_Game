@@ -338,7 +338,7 @@ class GameRun:
             self._game.if_game_ended_up_down(self._game._player2._sign)
 
     def run_game(self):
-        """Plays the game, returns name of the winner."""
+        """Plays a game, returns name of the winner."""
         while not self.result_of_game:
             last_letter, last_number = self.player1_turn()
             if not self.result_of_game:
