@@ -17,9 +17,9 @@ def main():
         name1 = ''
         name2 = ''
         while not name1:
-            name1 = input("Player 1:\nPlease, enter your name.\n")
+            name1 = input("Player 1:\nPlease, enter your name:\n")
         while not name2:
-            name2 = input("Player 2:\nPlease, enter your name.\n")
+            name2 = input("Player 2:\nPlease, enter your name:\n")
             if name2 == name1:
                 inp = "Player 2:\nYour name cannot be the same as your \
                     opponent's.\nChoose another name."

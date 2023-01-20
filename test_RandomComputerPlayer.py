@@ -14,7 +14,7 @@ def test_create_RandomCopmuterPlayer_normal():
 
 def test_create_RandomComputerPlayer_invalid_sign():
     with pytest.raises(SignNotStringError):
-        RandomComputerPlayer('name', 8, 'up-down', 5)
+        RandomComputerPlayer('pl_name', 8, 'up-down', 5)
 
 
 def test_create_RandomComputerPlayer_invalid_name():
