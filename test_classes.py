@@ -557,7 +557,7 @@ def test_player2_turn_human_random(monkeypatch):
 
 
 def test_player2_turn_end_human_random(monkeypatch):
-    game_run = GameRun('2', 5, 'nam')
+    game_run = GameRun('2', 5, 'name')
     test_fields3['42']._sign = '-'
     test_fields3['42'].is_free = True
     game_run._game._board.fields = test_fields3

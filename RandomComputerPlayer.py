@@ -19,7 +19,7 @@ class RandomComputerPlayer:
         if type(pl_sign) != str:
             raise SignNotStringError("Player's sign has to be string type.")
         if type(name) != str:
-            raise NameNotStringError('Name has to be string type.')
+            raise NameNotStringError('Name has to be string type')
         self._sign = pl_sign
         if moving != 'up-down' and moving != 'left-right':
             msg = "Player's moving has to be up-down or left-right."

@@ -312,9 +312,13 @@ class GameRun:
         self._game = Game(self._player1, self._player2, board_siz)
         self.result_of_game = False
 
+    def crear(self):
+        print("\033c")
+
     def player1_turn(self):
         letter, number = self._game._player1.give_letter_number()
         self._game.player_move(self._game._player1, letter, number)
+        self.crear()
         print(str(self._game._board))
         self.result_of_game = \
             self._game.if_game_ended_left_right(self._game._player1._sign)
@@ -325,6 +329,7 @@ class GameRun:
         lett, numb = \
             self._game._player2.give_letter_number(last_l, last_n, fields)
         self._game.player_move(self._game._player2, lett, numb, last_l, last_n)
+        self.crear()
         print(str(self._game._board))
         self.result_of_game = \
             self._game.if_game_ended_up_down(self._game._player2._sign)
@@ -333,6 +338,7 @@ class GameRun:
         letter, number =\
             self._game._player2.give_letter_number()
         self._game.player_move(self._game._player2, letter, number)
+        self.crear()
         print(str(self._game._board))
         self.result_of_game = \
             self._game.if_game_ended_up_down(self._game._player2._sign)

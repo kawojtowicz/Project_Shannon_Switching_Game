@@ -46,7 +46,7 @@ class HumanPlayer:
                 print('Please, enter one sign.')
                 letter = ''
             elif letter != '' and (ord(letter) < 65 or ord(letter) > edge):
-                print(f"Your first sign has to be letter A-{chr(edge)}")
+                print(f"Your first sign has to be letter A-{chr(edge)}.")
                 letter = ''
         while not number:
             border = 48 + self._board_size
