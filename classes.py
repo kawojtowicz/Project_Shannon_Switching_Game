@@ -107,7 +107,7 @@ class Board:
         self.fields[key].set_sign(sign)
 
     def __str__(self):
-        first_line = f'   '
+        first_line = '   '
         for number in range(self._size):
             first_line += f'{number}'
         second_line = self._size * 'O'
@@ -126,12 +126,15 @@ class Board:
 class Game:
     def __init__(self, pl1_inf, pl2_inf, board_size):
         # player is a tuple: (class, name, sign, moving)
+        b_siz = board_size
+        nm = 'Computer Player'
+        modes = ['Human', '2', '3']
         if type(board_size) != int:
             raise InvalidSizeError('Board size has to be int type.')
         if board_size < 5 or board_size > 9:
             msg = 'Size of board should be bigger than 5 and lesser than 10.'
             raise InvalidSizeError(msg)
-        if pl1_inf[0] not in ['Human', '2', '3'] or pl2_inf[0] not in ['Human', '2', '3']:
+        if pl1_inf[0] not in ['Human', '2', '3'] or pl2_inf[0] not in modes:
             raise InvalidPlayersClassError()
         if type(pl1_inf[1]) != str or type(pl2_inf[1]) != str:
             raise InvalidNameTypeError()
@@ -150,10 +153,9 @@ class Game:
         if pl2_inf[0] == 'Human':
             self._player2 = HumanPlayer(name2, sign2, pl2_inf[3], board_size)
         elif pl2_inf[0] == '2':
-            self._player2 = RandomComputerPlayer('Computer Player', sign2, pl2_inf[3], board_size)
+            self._player2 = RandomComputerPlayer(nm, sign2, pl2_inf[3], b_siz)
         elif pl2_inf[0] == '3':
-            self._player2 = HeavyComputerPlayer('Computer Player', sign2, pl1_inf[3], board_size)
-
+            self._player2 = HeavyComputerPlayer(nm, sign2, pl1_inf[3], b_siz)
 
     def up_down_connected(self, fields_dict, pl_sign, fields_in):
         for key in fields_in:
@@ -218,7 +220,8 @@ class Game:
             if fields[f'{letter}{0}']._sign == pl_sign:
                 fields_in.append(f'{letter}{0}')
         while fields_in != []:
-            fields_in = self.move_in_checking_left_right(fields, fields_in, pl_sign)
+            fields_in = \
+                self.move_in_checking_left_right(fields, fields_in, pl_sign)
             if type(fields_in) == str:
                 return fields_in
         # game in not finished yet:
@@ -231,18 +234,18 @@ class Game:
             if fields[f'{0}{number}']._sign == pl_sign:
                 fields_in.append(f'{0}{number}')
         while fields_in != []:
-            fields_in = self.move_in_checking_up_down(fields, fields_in, pl_sign)
+            fields_in = \
+                self.move_in_checking_up_down(fields, fields_in, pl_sign)
             if type(fields_in) == str:
                 return fields_in
         # game in not finished yet:
         return False
 
     def players_move(self, player, letter='', number='', previous_letter='', previous_number=''):
-        # new_letter = previous_letter
-        # new_number = previous_number
         if type(player) is HeavyComputerPlayer:
             while not self._board.fields[f'{letter}{number}'].is_free:
-                letter, number = player.give_letter_and_number(previous_letter, previous_number, self._board.fields)
+                letter, number = \
+                    player.give_letter_and_number(previous_letter, previous_number, self._board.fields)
             if self._board.fields[f'{letter}{number}'].is_free:
                 self._board.fields[f'{letter}{number}'].set_sign(player._sign)
         else:
@@ -283,7 +286,8 @@ class GameRun:
                     letter, number = self._game._player2.give_letter_and_number(previous_letter, previous_number, self._game._board.fields)
                     self._game.players_move(self._game._player2, letter, number, previous_letter, previous_number)
                 else:
-                    letter, number = self._game._player2.give_letter_and_number()
+                    letter, number =\
+                         self._game._player2.give_letter_and_number()
                     self._game.players_move(self._game._player2, letter, number)
                 print(str(self._game._board))
                 self.result_of_game = self._game.check_if_game_is_finished_up_down(self._game._player2._sign)
@@ -293,4 +297,3 @@ class GameRun:
                 return self._game._player1.name
             else:
                 return self._game._player2.name
-
