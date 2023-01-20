@@ -39,7 +39,7 @@ class HumanPlayer:
     def give_letter_and_number(self, letter='', number=''):
         edge = 64 + self._board_size
         edge1 = self._board_size - 1
-        while letter == '':
+        while not letter:
             letter = input(f"{self.name}, enter letter of choosen field.")
             if len(letter) > 1:
                 print('Please, enter one sign')
@@ -47,12 +47,13 @@ class HumanPlayer:
             elif letter != '' and (ord(letter) < 65 or ord(letter) > edge):
                 print(f"Your first sign has to be letter A-{chr(edge)}")
                 letter = ''
-        while number == '':
+        while not number:
+            border = 48 + self._board_size
             number = input(f"{self.name}, enter number of choosen field.")
             if len(number) != 1:
                 print('Please, choose one sign.')
                 number = ''
-            elif number != '' and ord(number) not in range(48, 48 + self._board_size):
+            elif number != '' and ord(number) not in range(48, border):
                 # if (int(number) not in range(self._board_size + 1)):
                 print(f"Your second sign has to be number 0-{edge1}")
                 number = ''

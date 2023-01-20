@@ -26,7 +26,6 @@ class RandomComputerPlayer:
         self._moving = moving
         self.name = name
         self._board_size = board_size
-        # to edit
 
     def give_letter_and_number(self, letter='', number=''):
         letter = randint(0, self._board_size - 1)

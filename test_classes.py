@@ -149,7 +149,7 @@ def test_create_field_invalid_is_free():
 def test__str__():
     field = Field(1, 7)
     assert str(field) == '-'
-    field2 = Field(1, 1, sign= 'X')
+    field2 = Field(1, 1, sign='X')
     assert str(field2) == 'X'
 
 
@@ -213,7 +213,8 @@ def test_move_field_taken():
 
 def test__str__board():
     board = Board(5)
-    line = '   01234\n   OOOOO\nA X-X-X-X\nB XO-O-OX\nC X-X-X-X\nD XO-O-OX\nE X-X-X-X\n   OOOOO'
+    line = '   01234\n   OOOOO\nA X-X-X-X\nB XO-O-OX\nC X-X-X-X\n'
+    line += 'D XO-O-OX\nE X-X-X-X\n   OOOOO'
     assert str(board) == line
 
 
@@ -445,7 +446,9 @@ def test_create_game_run():
     assert game_run._player1 == ('Human', "Kasia", 'X', 'left-right')
     assert game_run._player2 == ('Human', "Computer", 'O', 'up-down')
     assert game_run._game_mode == 'Human'
-    assert str(game_run._game._board) == '   01234\n   OOOOO\nA X-X-X-X\nB XO-O-OX\nC X-X-X-X\nD XO-O-OX\nE X-X-X-X\n   OOOOO'
+    line = '   01234\n   OOOOO\nA X-X-X-X\nB XO-O-OX\n'
+    line += 'C X-X-X-X\nD XO-O-OX\nE X-X-X-X\n   OOOOO'
+    assert str(game_run._game._board) == line
 
 
 def test_create_game_run_GameModeError():
@@ -493,4 +496,3 @@ def test_run_game_O_wins(monkeypatch):
     monkeypatch.setattr(HumanPlayer, 'give_letter_and_number', give44)
     monkeypatch.setattr(RandomComputerPlayer, 'give_letter_and_number', give43)
     assert game_run.run_game() == 'Computer Player'
-
