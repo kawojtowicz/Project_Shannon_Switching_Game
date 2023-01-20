@@ -18,7 +18,7 @@ def test_cretate_player_SingNotString():
 
 def test_cretate_player_MovingError():
     with pytest.raises(MovingError):
-        HumanPlayer('pl_n', "Player", "up-dow", 8)
+        HumanPlayer('pl_na', "Player", "up-dow", 8)
 
 
 def test_create_player_NameNotStringError():

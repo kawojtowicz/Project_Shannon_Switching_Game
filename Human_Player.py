@@ -55,7 +55,7 @@ class HumanPlayer:
                 print('Please, choose one sign.')
                 number = ''
             elif number != '' and ord(number) not in range(48, border):
-                print(f"Your second sign has to be number 0-{edge1}")
+                print(f"Your second sign has to be number 0-{edge1}.")
                 number = ''
         letter = ord(letter) - 65
         number = int(number)
