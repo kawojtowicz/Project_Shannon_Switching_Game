@@ -5,7 +5,7 @@ Project created for subject PIPR (Automatic Control and Robotics, Warsaw Univers
 
 ## Description
 This project is a game invented by Claude Shannon. More information: https://en.wikipedia.org/wiki/Shannon_switching_game .
-Rules in polish in file .
+Rules in polish in file Dokumentacja_projektu.pdf.
 
 ## Project status
 Project finished with positive note but further changes connected with better GUI are planned.
